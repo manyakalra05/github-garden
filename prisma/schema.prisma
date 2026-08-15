@@ -1,0 +1,73 @@
+// GitHub Garden — database schema
+// Every GitHub user who has been "planted" lives here. Rows are created by:
+//  1. the bulk seed script (scripts/seed.ts) pulling real, high-activity users
+//  2. on-demand planting the first time someone is searched and not yet in the garden
+//  3. NextAuth, which upserts the signed-in user's own row on login
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GardenUser {
+  id             String   @id @default(cuid())
+  githubId       BigInt   @unique
+  username       String   @unique
+  displayName    String?
+  avatarUrl      String?
+  bio            String?
+  primaryLanguage String?
+  languages      Json?    // { "TypeScript": 42, "Python": 18, ... } bytes-weighted
+  publicRepos    Int      @default(0)
+  followers      Int      @default(0)
+  following      Int      @default(0)
+  totalStars     Int      @default(0)
+  contributions  Int      @default(0) // last-year contribution estimate
+  pullRequests   Int      @default(0)
+  accountAgeDays Int      @default(0)
+  lastActiveAt   DateTime?
+  createdAtGithub DateTime?
+
+  // Procedural placement — computed once so every session sees the same layout
+  plotX          Float
+  plotZ          Float
+  plotSeed       Int
+
+  // Derived visual params (recomputed on refresh, cached so the client never
+  // needs to run the mapping logic itself)
+  treeHeight     Float    @default(1)
+  canopySpread   Float    @default(1)
+  flowerDensity  Float    @default(0.5)
+  glowIntensity  Float    @default(0.3)
+  accentColor    String   @default("#b794f6")
+
+  isClaimed      Boolean  @default(false) // true once the real user signs in
+  clerkUserId    String?  @unique         // set once claimed via Clerk sign-in
+  waterCount     Int      @default(0)     // "water this tree" social feature
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  waterings      Watering[]
+
+  @@index([username])
+  @@index([contributions])
+}
+
+model Watering {
+  id           String     @id @default(cuid())
+  gardenUser   GardenUser @relation(fields: [gardenUserId], references: [id])
+  gardenUserId String
+  waterer      String     // username of whoever watered it
+  createdAt    DateTime   @default(now())
+
+  @@unique([gardenUserId, waterer])
+}
+
+// Auth/session state now lives entirely in Clerk — no local User/Session
+// tables needed. We only store the mapping from a Clerk user to their
+// GitHub-derived garden tree, via GardenUser.clerkUserId below.
