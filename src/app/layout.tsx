@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider proxyUrl="/__clerk">
       <html lang="en">
         <body>{children}</body>
       </html>
