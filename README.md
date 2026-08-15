@@ -134,13 +134,3 @@ gives you 50,000 real, active usernames in seconds. Feed that list into
 `plantOrRefreshUser()` (the same function the current seed script uses) and
 you get the same real-data trees at much larger scale — this is a one-line
 swap in `collectCandidateUsernames()`, not an architecture change.
-
-## Known limitation from the build sandbox this was written in
-
-`npx prisma generate` couldn't complete here because this sandbox's network
-allowlist blocks `binaries.prisma.sh` (the domain Prisma downloads its query
-engine binary from). Everything else was verified: `tsc --noEmit` is clean
-and `next build`'s compile step succeeds. Once you run
-`npm install && npx prisma generate` in your own environment (unrestricted
-network), this resolves itself — it's a sandbox constraint, not a bug in
-this codebase.
