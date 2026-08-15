@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-// Ignore missing type declarations for this global CSS side-effect import
 // @ts-ignore
 import "./globals.css";
 
@@ -16,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider proxyUrl="/__clerk">
+    <ClerkProvider>
       <html lang="en">
         <body>{children}</body>
       </html>
