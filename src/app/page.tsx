@@ -77,13 +77,7 @@ export default function Home() {
                 🌸 GitHub Garden
               </h1>
 
-              <p className="text-xs text-white/60">
-
-                {loaded
-                  ? `${MAX_RENDERED_TREES} developers planted`
-                  : "Growing the garden..."}
-
-              </p>
+            
 
             </div>
 
