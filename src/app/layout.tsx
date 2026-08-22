@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import localFont from "next/font/local";
 import { MedievalSharp } from "next/font/google";
-// @ts-expect-error CSS is handled by Next.js at build time.
 import "./globals.css";
 
 const gardenFont = localFont({
