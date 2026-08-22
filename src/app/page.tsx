@@ -73,7 +73,7 @@ export default function Home() {
 
             <div>
 
-              <h1 className="text-xl font-semibold text-white drop-shadow">
+              <h1 className="garden-title text-xl text-white drop-shadow">
                 🌸 GitHub Garden
               </h1>
 
